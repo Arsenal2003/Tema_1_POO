@@ -6,7 +6,7 @@ public class Player {
 
     private int gamesWon;
     private int gamesPlayed;
-    private int mana;
+    private int mana = 0;
     private ArrayList<Deck> decksPlayer;
 
 

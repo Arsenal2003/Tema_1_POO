@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import checker.CheckerConstants;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import fileio.Coordinates;
 import fileio.Input;
 
 import java.io.File;
@@ -139,8 +141,10 @@ public final class Main {
         //  loop-ul de jocuri
            for(int i=0;i<inputData.getGames().size();i++){
                // TODO initializarea unui joc
-              Table table = new Table();
-              Hero player1Hero = new Hero(inputData.getGames().get(i).getStartGame().getPlayerOneHero().getMana(),
+               p1.setMana(0);
+               p2.setMana(0);
+               Table table = new Table(new ArrayList<ArrayList<Card>>());
+               Hero player1Hero = new Hero(inputData.getGames().get(i).getStartGame().getPlayerOneHero().getMana(),
                       inputData.getGames().get(i).getStartGame().getPlayerOneHero().getDescription(),
                       inputData.getGames().get(i).getStartGame().getPlayerOneHero().getColors(),
                       inputData.getGames().get(i).getStartGame().getPlayerOneHero().getName());
@@ -162,12 +166,36 @@ public final class Main {
 
                // TODO loop pt urmarirea actiunilor din jocul respectiv
                for(int j=0;j<inputData.getGames().get(i).getActions().size();j++){
-                    System.out.println(inputData.getGames().get(i).getActions().get(j));
+                  // System.out.println(inputData.getGames().get(i).getActions().get(j).getCommand());
+                   // preluarea fiecarei actiuni ale unui joc
+                   ObjectNode arrayObject =  game.executeCommand(inputData.getGames().get(i).getActions().get(j).getCommand(),
+                            inputData.getGames().get(i).getActions().get(j).getHandIdx(),
+                            inputData.getGames().get(i).getActions().get(j).getCardAttacker(),
+                            inputData.getGames().get(i).getActions().get(j).getCardAttacked(),
+                            inputData.getGames().get(i).getActions().get(j).getAffectedRow(),
+                            inputData.getGames().get(i).getActions().get(j).getPlayerIdx(),
+                            inputData.getGames().get(i).getActions().get(j).getX(),
+                            inputData.getGames().get(i).getActions().get(j).getY()
+                            );
 
+                   if(arrayObject != null) // adugare in json a rezultatului functiei, daca exista
+                    output.addPOJO(arrayObject);
+
+
+                    if(game.getPlayerOneHero().getHealth()<=0){ // jocul se termina daca oricare dintre eroi are health egal cu 0
+                        p2.setGamesWon(p2.getGamesWon()+1);
+                        break;
+                    }
+                    else {
+                        if (game.getPlayerTwoHero().getHealth() <= 0){
+                            p1.setGamesWon(p1.getGamesWon() + 1);
+                            break;}
+                    }
                }
 
+               p1.setGamesPlayed(p1.getGamesPlayed()+1);
+               p2.setGamesPlayed(p2.getGamesPlayed()+1);
            }
-
 
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();

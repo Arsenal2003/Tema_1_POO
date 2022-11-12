@@ -1,5 +1,8 @@
 package Game;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.util.ArrayList;
 
 public class Hero extends Card{
@@ -9,4 +12,24 @@ public class Hero extends Card{
         super(mana, description, colors, name);
     }
 
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    @Override
+    public ObjectNode cardToJson(ObjectMapper objectMapper){
+
+        ObjectNode arrayObject = objectMapper.createObjectNode();
+        arrayObject.putPOJO("mana",getMana());
+        arrayObject.putPOJO("description",getDescription());
+        arrayObject.putPOJO("colors",getColors());
+        arrayObject.putPOJO("name",getName());
+        arrayObject.putPOJO("health",getHealth());
+
+        return arrayObject;
+    }
 }
