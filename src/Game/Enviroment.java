@@ -35,8 +35,8 @@ public class Enviroment extends Card{
         p.setMana(p.getMana()-deck.getCards().get(idx).getMana());
         deck.getCards().remove(idx);
         deck.setNrCardsInDeck(deck.getNrCardsInDeck()-1);
-        for(int i=1;i<table.getFrozenCards().get(row).size();i++)
-            table.getFrozenCards().get(row).set(table.getFrozenCards().get(row).get(i),1);
+        for(int i=0;i<5;i++)
+            table.getFrozenCards()[row][i] =1;
 
 
         return null;

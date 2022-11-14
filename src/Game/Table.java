@@ -9,15 +9,20 @@ import java.util.ArrayList;
 
 public class Table {
     private ArrayList<ArrayList<Card>> cardTable;
-    private ArrayList<ArrayList<Integer>> frozenCards = new ArrayList<>();
-    private ArrayList<ArrayList<Integer>> usedCards = new ArrayList<>();
+    private int[][] frozenCards = new int[4][5];
+    private int[][] usedCards = new int[4][5];
 
     public Table(ArrayList<ArrayList<Card>> cardTable) {
         this.cardTable = cardTable;
         for(int i=0;i<4;i++){
             this.cardTable.add(new ArrayList<>());
-            this.frozenCards.add(new ArrayList<>());
-            this.usedCards.add(new ArrayList<>());
+        }
+        for(int i=0;i<4;i++){
+            for(int j=0;j<5;j++){
+                frozenCards[i][j]=0;
+                usedCards[i][j]=0;
+            }
+
         }
 
     }
@@ -45,8 +50,8 @@ public class Table {
     private String playCard(Deck deck, int poz,Player p,int row) {
         if(cardTable.get(row).size()==5)
             return "Cannot place card on table since row is full.";
-        frozenCards.get(row).add(0);
-        usedCards.get(row).add(0);
+        frozenCards[row][cardTable.get(row).size()]=0;
+        usedCards[row][cardTable.get(row).size()]=0;
         cardTable.get(row).add(deck.getCards().get(poz));
         p.setMana(p.getMana()-deck.getCards().get(poz).getMana());
         deck.getCards().remove(poz);
@@ -68,39 +73,39 @@ public class Table {
             for(int j=0;j<cardTable.get(i).size();j++)
                 if(((Minion)cardTable.get(i).get(j)).getHealth()<=0){
                     cardTable.get(i).remove(j);
-                    frozenCards.get(i).remove(j);
-                    usedCards.get(i).remove(j);
+                    frozenCards[i][j]=0;
+                    usedCards[i][j]=0;
                     j--;
                 }
 
     }
     public void deFrozeCards(int player){
         if(player==1){
-            //frozenCards.get(3).forEach((n)->n=0);
-            //frozenCards.get(2).forEach((n)->n=0);
-            //usedCards.get(3).forEach((n)->n=0);
-            //usedCards.get(2).forEach((n)->n=0);
-
+           for(int i=2;i<=3;i++)
+               for(int j=0;j<=4;j++){
+                   frozenCards[i][j]=0;
+                   usedCards[i][j]=0;
+               }
         }
             else{
-            //usedCards.get(0).forEach((n)->n=0);
-            //usedCards.get(1).forEach((n)->n=0);
-            //frozenCards.get(0).forEach((n)->n=0);
-            //frozenCards.get(1).forEach((n)->n=0);
-
+            for(int i=0;i<=1;i++)
+                for(int j=0;j<=4;j++){
+                    frozenCards[i][j]=0;
+                    usedCards[i][j]=0;
+                }
         }
 
     }
 
     public boolean existsTank(int player){
         if(player==1){
-            for(int i=1;i<cardTable.get(2).size();i++)
-                if(((Minion)cardTable.get(2).get(i)).getIsTank() ==1)
+            for(int i=0;i<cardTable.get(1).size();i++)
+                if(((Minion)cardTable.get(1).get(i)).getIsTank() == 1)
                     return true;
 
         }else{
-            for(int i=1;i<cardTable.get(1).size();i++)
-                if(((Minion)cardTable.get(1).get(i)).getIsTank() ==1)
+            for(int i=0;i<cardTable.get(2).size();i++)
+                if(((Minion)cardTable.get(2).get(i)).getIsTank() == 1)
                     return true;
 
         }
@@ -115,18 +120,16 @@ public class Table {
             if(attacked.getX()==1 || attacked.getX()==0 )
                 return "Attacked card does not belong to the enemy.";
         }
-        System.out.println(frozenCards);
-        System.out.println(attacker);
 
-        if(usedCards.get(attacker.getX()).get(attacker.getY()) == 1)
+        if(usedCards[attacker.getX()][attacker.getY()] == 1)
                 return "Attacker card has already attacked this turn.";
-        if(frozenCards.get(attacker.getX()).get(attacker.getY()) == 1)
+        if(frozenCards[attacker.getX()][attacker.getY()] == 1)
             return "Attacker card is frozen.";
-        if(existsTank(3-playerTurn))
-            return "Attacked card is not of type 'Tank’.";
+        if(existsTank(playerTurn) && ((Minion)cardTable.get(attacked.getX()).get(attacked.getY())).getIsTank()==0)
+            return "Attacked card is not of type 'Tank'.";
 
         ((Minion)cardTable.get(attacked.getX()).get(attacked.getY())).setHealth(((Minion)cardTable.get(attacked.getX()).get(attacked.getY())).getHealth()-((Minion)cardTable.get(attacker.getX()).get(attacker.getY())).getAttackDamage());
-        usedCards.get(attacker.getX()).set(usedCards.get(attacker.getX()).get(attacker.getY()),1);
+        usedCards[attacker.getX()][attacker.getY()]=1;
         destroyDeadCards();
 
         return null;
@@ -136,7 +139,7 @@ public class Table {
 
         for(int i=0;i<4;i++) {
             for (int j = 0; j < cardTable.get(i).size(); j++) {
-                if(frozenCards.get(i).get(j)==1)
+                if(frozenCards[i][j]==1)
                 vectfinal.addPOJO(cardTable.get(i).get(j).cardToJson(objectMapper));
 
             }
@@ -176,9 +179,7 @@ public class Table {
         return cardTable;
     }
 
-    public ArrayList<ArrayList<Integer>> getFrozenCards() {
+    public int[][] getFrozenCards() {
         return frozenCards;
     }
-
-
 }
