@@ -9,6 +9,7 @@ public class Minion extends Card{
 
     private int attackDamage;
     private int health;
+    private int isTank = 0;
 
     public Minion(Minion minion) {
         super(minion);
@@ -20,6 +21,8 @@ public class Minion extends Card{
         super(mana, description, colors, name);
         this.attackDamage = attackDamage;
         this.health = health;
+        if(getName().equals("Goliath") || getName().equals("Warden"))
+            this.isTank =1;
     }
     @Override
     public ObjectNode cardToJson(ObjectMapper objectMapper){
@@ -48,5 +51,13 @@ public class Minion extends Card{
 
     public int getHealth() {
         return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getIsTank() {
+        return isTank;
     }
 }

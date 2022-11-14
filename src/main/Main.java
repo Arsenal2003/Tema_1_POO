@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import checker.CheckerConstants;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import fileio.Coordinates;
 import fileio.Input;
 
 import java.io.File;
@@ -136,7 +135,6 @@ public final class Main {
 
         Player p1 = new Player(player1Decks);
         Player p2 = new Player(player2Decks);
-        //System.out.println(p2.getDecksPlayer());
 
         //  loop-ul de jocuri
            for(int i=0;i<inputData.getGames().size();i++){
@@ -166,7 +164,7 @@ public final class Main {
 
                // TODO loop pt urmarirea actiunilor din jocul respectiv
                for(int j=0;j<inputData.getGames().get(i).getActions().size();j++){
-                  // System.out.println(inputData.getGames().get(i).getActions().get(j).getCommand());
+                   //System.out.println(inputData.getGames().get(i).getActions().get(j).getCommand());
                    // preluarea fiecarei actiuni ale unui joc
                    ObjectNode arrayObject =  game.executeCommand(inputData.getGames().get(i).getActions().get(j).getCommand(),
                             inputData.getGames().get(i).getActions().get(j).getHandIdx(),
@@ -181,22 +179,19 @@ public final class Main {
                    if(arrayObject != null) // adugare in json a rezultatului functiei, daca exista
                     output.addPOJO(arrayObject);
 
-
-                    if(game.getPlayerOneHero().getHealth()<=0){ // jocul se termina daca oricare dintre eroi are health egal cu 0
-                        p2.setGamesWon(p2.getGamesWon()+1);
+                   if(game.getPlayerOneHero().getHealth() <= 0) { // jocul se termina daca oricare dintre eroi are health egal cu 0
+                        p2.setGamesWon(p2.getGamesWon() + 1);
                         break;
                     }
-                    else {
+                   else {
                         if (game.getPlayerTwoHero().getHealth() <= 0){
                             p1.setGamesWon(p1.getGamesWon() + 1);
-                            break;}
-                    }
+                            break;
+                        } }
                }
-
-               p1.setGamesPlayed(p1.getGamesPlayed()+1);
-               p2.setGamesPlayed(p2.getGamesPlayed()+1);
+               p1.setGamesPlayed(p1.getGamesPlayed() + 1);
+               p2.setGamesPlayed(p2.getGamesPlayed() + 1);
            }
-
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);
