@@ -31,6 +31,7 @@ public final class Main {
     /**
      * DO NOT MODIFY MAIN METHOD
      * Call the checker
+     *
      * @param args from command line
      * @throws IOException in case of exceptions to reading / writing
      */
@@ -76,7 +77,7 @@ public final class Main {
 
         // citire deck pt player 1
         ArrayList<Deck> player1Decks = new ArrayList<>();
-        for(int i=0;i<inputData.getPlayerOneDecks().getNrDecks();i++) {
+        for (int i = 0; i < inputData.getPlayerOneDecks().getNrDecks(); i++) {
             Deck player1Deck = new Deck(inputData.getPlayerOneDecks().getNrCardsInDeck());
             for (int j = 0; j < inputData.getPlayerOneDecks().getNrCardsInDeck(); j++) {
                 String cardType = inputData.getPlayerOneDecks().getDecks().get(i).get(j).getName();
@@ -105,7 +106,7 @@ public final class Main {
         }
         // citire deck pt player 2
         ArrayList<Deck> player2Decks = new ArrayList<>();
-        for(int i=0;i<inputData.getPlayerTwoDecks().getNrDecks();i++) {
+        for (int i = 0; i < inputData.getPlayerTwoDecks().getNrDecks(); i++) {
             Deck player2Deck = new Deck(inputData.getPlayerTwoDecks().getNrCardsInDeck());
             for (int j = 0; j < inputData.getPlayerTwoDecks().getNrCardsInDeck(); j++) {
                 String cardType = inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getName();
@@ -137,61 +138,66 @@ public final class Main {
         Player p2 = new Player(player2Decks);
 
         //  loop-ul de jocuri
-           for(int i=0;i<inputData.getGames().size();i++){
-               // TODO initializarea unui joc
-               p1.setMana(0);
-               p2.setMana(0);
-               Table table = new Table(new ArrayList<ArrayList<Card>>());
-               Hero player1Hero = new Hero(inputData.getGames().get(i).getStartGame().getPlayerOneHero().getMana(),
-                      inputData.getGames().get(i).getStartGame().getPlayerOneHero().getDescription(),
-                      inputData.getGames().get(i).getStartGame().getPlayerOneHero().getColors(),
-                      inputData.getGames().get(i).getStartGame().getPlayerOneHero().getName());
-               Hero player2Hero = new Hero(inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getMana(),
-                       inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getDescription(),
-                       inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getColors(),
-                       inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getName());
+        for (int i = 0; i < inputData.getGames().size(); i++) {
+            // TODO initializarea unui joc
+            p1.setMana(0);
+            p2.setMana(0);
+            Table table = new Table(new ArrayList<ArrayList<Card>>());
+            Hero player1Hero = new Hero(inputData.getGames().get(i).getStartGame().getPlayerOneHero().getMana(),
+                    inputData.getGames().get(i).getStartGame().getPlayerOneHero().getDescription(),
+                    inputData.getGames().get(i).getStartGame().getPlayerOneHero().getColors(),
+                    inputData.getGames().get(i).getStartGame().getPlayerOneHero().getName());
+            Hero player2Hero = new Hero(inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getMana(),
+                    inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getDescription(),
+                    inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getColors(),
+                    inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getName());
 
-               Game game = new Game(p1,
-                       p2,
-                       inputData.getGames().get(i).getStartGame().getPlayerOneDeckIdx(),
-                       inputData.getGames().get(i).getStartGame().getPlayerTwoDeckIdx(),
-                       player1Hero,
-                       player2Hero,
-                       table,
-                       inputData.getGames().get(i).getStartGame().getShuffleSeed(),
-                       inputData.getGames().get(i).getStartGame().getStartingPlayer()
-                       );
+            Game game = new Game(p1,
+                    p2,
+                    inputData.getGames().get(i).getStartGame().getPlayerOneDeckIdx(),
+                    inputData.getGames().get(i).getStartGame().getPlayerTwoDeckIdx(),
+                    player1Hero,
+                    player2Hero,
+                    table,
+                    inputData.getGames().get(i).getStartGame().getShuffleSeed(),
+                    inputData.getGames().get(i).getStartGame().getStartingPlayer()
+            );
 
-               // TODO loop pt urmarirea actiunilor din jocul respectiv
-               for(int j=0;j<inputData.getGames().get(i).getActions().size();j++){
-                   //System.out.println(inputData.getGames().get(i).getActions().get(j).getCommand());
-                   // preluarea fiecarei actiuni ale unui joc
-                   ObjectNode arrayObject =  game.executeCommand(inputData.getGames().get(i).getActions().get(j).getCommand(),
-                            inputData.getGames().get(i).getActions().get(j).getHandIdx(),
-                            inputData.getGames().get(i).getActions().get(j).getCardAttacker(),
-                            inputData.getGames().get(i).getActions().get(j).getCardAttacked(),
-                            inputData.getGames().get(i).getActions().get(j).getAffectedRow(),
-                            inputData.getGames().get(i).getActions().get(j).getPlayerIdx(),
-                            inputData.getGames().get(i).getActions().get(j).getX(),
-                            inputData.getGames().get(i).getActions().get(j).getY()
-                            );
+            // TODO loop pt urmarirea actiunilor din jocul respectiv
+            for (int j = 0; j < inputData.getGames().get(i).getActions().size(); j++) {
+                // preluarea fiecarei actiuni ale unui joc
+                ObjectNode arrayObject = game.executeCommand(inputData.getGames().get(i).getActions().get(j).getCommand(),
+                        inputData.getGames().get(i).getActions().get(j).getHandIdx(),
+                        inputData.getGames().get(i).getActions().get(j).getCardAttacker(),
+                        inputData.getGames().get(i).getActions().get(j).getCardAttacked(),
+                        inputData.getGames().get(i).getActions().get(j).getAffectedRow(),
+                        inputData.getGames().get(i).getActions().get(j).getPlayerIdx(),
+                        inputData.getGames().get(i).getActions().get(j).getX(),
+                        inputData.getGames().get(i).getActions().get(j).getY()
+                );
 
-                   if(arrayObject != null) // adugare in json a rezultatului functiei, daca exista
+                if (arrayObject != null) // adugare in json a rezultatului functiei, daca exista
                     output.addPOJO(arrayObject);
 
-                   if(game.getPlayerOneHero().getHealth() <= 0) { // jocul se termina daca oricare dintre eroi are health egal cu 0
-                        p2.setGamesWon(p2.getGamesWon() + 1);
-                        break;
+                if (game.getPlayerOneHero().getHealth() <= 0 && game.getGameEnded() == 0) { // jocul se termina daca oricare dintre eroi are health egal cu 0
+                    ObjectNode victory = objectMapper.createObjectNode();
+                    victory.putPOJO("gameEnded", "Player two killed the enemy hero.");
+                    output.addPOJO(victory);
+                    p2.setGamesWon(p2.getGamesWon() + 1);
+                    game.setGameEnded(1);
+
+                } else {
+                    if (game.getPlayerTwoHero().getHealth() <= 0 && game.getGameEnded() == 0) {
+                        ObjectNode victory = objectMapper.createObjectNode();
+                        victory.putPOJO("gameEnded", "Player one killed the enemy hero.");
+                        output.addPOJO(victory);
+                        p1.setGamesWon(p1.getGamesWon() + 1);
+                        game.setGameEnded(1);
                     }
-                   else {
-                        if (game.getPlayerTwoHero().getHealth() <= 0){
-                            p1.setGamesWon(p1.getGamesWon() + 1);
-                            break;
-                        } }
-               }
-               p1.setGamesPlayed(p1.getGamesPlayed() + 1);
-               p2.setGamesPlayed(p2.getGamesPlayed() + 1);
-           }
+                }
+            }
+
+        }
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);

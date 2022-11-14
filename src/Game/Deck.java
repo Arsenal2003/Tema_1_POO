@@ -10,6 +10,7 @@ public class Deck {
         this.nrCardsInDeck = nrCardsInDeck;
         cards = new ArrayList<Card>();
     }
+
     public ArrayList<Card> getCards() {
         return cards;
     }
