@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class Player {
 
     private int gamesWon;
-    private int gamesPlayed;
     private int mana = 0;
     private ArrayList<Deck> decksPlayer;
 
@@ -19,9 +18,6 @@ public class Player {
         this.gamesWon = gamesWon;
     }
 
-    public void setGamesPlayed(int gamesPlayed) {
-        this.gamesPlayed = gamesPlayed;
-    }
 
     public void setMana(int mana) {
         this.mana = mana;
@@ -32,9 +28,7 @@ public class Player {
         return gamesWon;
     }
 
-    public int getGamesPlayed() {
-        return gamesPlayed;
-    }
+
 
     public int getMana() {
         return mana;
@@ -42,10 +36,6 @@ public class Player {
 
     public ArrayList<Deck> getDecksPlayer() {
         return decksPlayer;
-    }
-
-    public void setDecksPlayer(ArrayList<Deck> decksPlayer) {
-        this.decksPlayer = decksPlayer;
     }
 
 }

@@ -275,9 +275,11 @@ public class Game {
         ObjectNode arrayObject = objectMapper.createObjectNode();
         arrayObject.putPOJO("command", "getCardAtPosition");
         if (table.printCardAtPosition(x, y, objectMapper) == null)
-            arrayObject.putPOJO("output", "No card at that position.");
+            arrayObject.putPOJO("output", "No card available at that position.");
         else
             arrayObject.putPOJO("output", table.printCardAtPosition(x, y, objectMapper));
+        arrayObject.putPOJO("x", x);
+        arrayObject.putPOJO("y", y);
         return arrayObject;
     }
 

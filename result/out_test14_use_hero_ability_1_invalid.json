@@ -15,7 +15,9 @@
     "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
     "colors" : [ "Yellow", "White" ],
     "name" : "Disciple"
-  }
+  },
+  "x" : 0,
+  "y" : 0
 }, {
   "command" : "getCardAtPosition",
   "output" : {
@@ -25,7 +27,9 @@
     "description" : "Standard card: Trained by the best, nothing will catch him off-guard.",
     "colors" : [ "Black", "White" ],
     "name" : "Sentinel"
-  }
+  },
+  "x" : 3,
+  "y" : 0
 }, {
   "command" : "getFrozenCardsOnTable",
   "output" : [ ]
@@ -41,7 +45,9 @@
     "description" : "Standard card: Trained by the best, nothing will catch him off-guard.",
     "colors" : [ "Black", "White" ],
     "name" : "Sentinel"
-  }
+  },
+  "x" : 3,
+  "y" : 0
 }, {
   "command" : "getCardAtPosition",
   "output" : {
@@ -51,7 +57,9 @@
     "description" : "Standard card: Everything is sacred to him, all is but a gift from the saints.",
     "colors" : [ "Yellow", "White" ],
     "name" : "Disciple"
-  }
+  },
+  "x" : 0,
+  "y" : 0
 }, {
   "command" : "useHeroAbility",
   "affectedRow" : 2,
