@@ -1,34 +1,28 @@
-package Game;
+package game;
 
 import java.util.ArrayList;
 
-public class Player {
+public final class Player {
 
     private int gamesWon;
     private int mana = 0;
-    private ArrayList<Deck> decksPlayer;
+    private final ArrayList<Deck> decksPlayer;
 
-
-
-    public Player( ArrayList<Deck> decksPlayer) {
+    public Player(final ArrayList<Deck> decksPlayer) {
         this.decksPlayer = decksPlayer;
     }
 
-    public void setGamesWon(int gamesWon) {
+    public void setGamesWon(final int gamesWon) {
         this.gamesWon = gamesWon;
     }
 
-
-    public void setMana(int mana) {
+    public void setMana(final int mana) {
         this.mana = mana;
     }
-
 
     public int getGamesWon() {
         return gamesWon;
     }
-
-
 
     public int getMana() {
         return mana;

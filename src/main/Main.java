@@ -1,14 +1,21 @@
 package main;
 
-import Game.*;
 import checker.Checker;
-
+import checker.CheckerConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import checker.CheckerConstants;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.Input;
+
+import game.Game;
+import game.Card;
+import game.Deck;
+import game.Table;
+import game.Player;
+import game.Hero;
+import game.Minion;
+import game.Environment;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,22 +90,29 @@ public final class Main {
                 String cardType = inputData.getPlayerOneDecks().getDecks().get(i).get(j).getName();
                 Card copyCard;
                 switch (cardType) {
-                    case "Disciple", "The Cursed One", "Miraj", "The Ripper", "Sentinel", "Berserker", "Goliath", "Warden" -> {
-                        copyCard = new Minion(inputData.getPlayerOneDecks().getDecks().get(i).get(j).getMana(),
-                                inputData.getPlayerOneDecks().getDecks().get(i).get(j).getDescription(),
+                    case "Disciple", "The Cursed One", "Miraj",
+                            "The Ripper", "Sentinel", "Berserker", "Goliath", "Warden" -> {
+                        copyCard = new Minion(inputData.getPlayerOneDecks().getDecks()
+                                .get(i).get(j).getMana(),
+                                inputData.getPlayerOneDecks().getDecks().get(i).get(j)
+                                        .getDescription(),
                                 inputData.getPlayerOneDecks().getDecks().get(i).get(j).getColors(),
                                 inputData.getPlayerOneDecks().getDecks().get(i).get(j).getName(),
-                                inputData.getPlayerOneDecks().getDecks().get(i).get(j).getAttackDamage(),
+                                inputData.getPlayerOneDecks().getDecks().get(i).get(j)
+                                        .getAttackDamage(),
                                 inputData.getPlayerOneDecks().getDecks().get(i).get(j).getHealth());
                         player1Deck.getCards().add(copyCard);
-
                     }
                     case "Firestorm", "Winterfell", "Heart Hound" -> {
-                        copyCard = new Enviroment(inputData.getPlayerOneDecks().getDecks().get(i).get(j).getMana(),
-                                inputData.getPlayerOneDecks().getDecks().get(i).get(j).getDescription(),
+                        copyCard = new Environment(inputData.getPlayerOneDecks().getDecks()
+                                .get(i).get(j).getMana(),
+                                inputData.getPlayerOneDecks().getDecks().get(i).get(j)
+                                        .getDescription(),
                                 inputData.getPlayerOneDecks().getDecks().get(i).get(j).getColors(),
                                 inputData.getPlayerOneDecks().getDecks().get(i).get(j).getName());
                         player1Deck.getCards().add(copyCard);
+                    }
+                    default -> {
                     }
                 }
             }
@@ -112,46 +126,52 @@ public final class Main {
                 String cardType = inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getName();
                 Card copyCard;
                 switch (cardType) {
-                    case "Disciple", "The Cursed One", "Miraj", "The Ripper", "Sentinel", "Berserker", "Goliath", "Warden" -> {
-                        copyCard = new Minion(inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getMana(),
-                                inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getDescription(),
+                    case "Disciple", "The Cursed One", "Miraj",
+                            "The Ripper", "Sentinel", "Berserker", "Goliath", "Warden" -> {
+                        copyCard = new Minion(
+                                inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getMana(),
+                                inputData.getPlayerTwoDecks().getDecks().get(i).get(j)
+                                        .getDescription(),
                                 inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getColors(),
                                 inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getName(),
-                                inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getAttackDamage(),
+                                inputData.getPlayerTwoDecks().getDecks().get(i).get(j)
+                                        .getAttackDamage(),
                                 inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getHealth());
                         player2Deck.getCards().add(copyCard);
-
                     }
                     case "Firestorm", "Winterfell", "Heart Hound" -> {
-                        copyCard = new Enviroment(inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getMana(),
-                                inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getDescription(),
+                        copyCard = new Environment(
+                                inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getMana(),
+                                inputData.getPlayerTwoDecks().getDecks().get(i).get(j)
+                                        .getDescription(),
                                 inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getColors(),
                                 inputData.getPlayerTwoDecks().getDecks().get(i).get(j).getName());
                         player2Deck.getCards().add(copyCard);
+                    }
+                    default -> {
                     }
                 }
             }
             player2Decks.add(player2Deck);
         }
-
         Player p1 = new Player(player1Decks);
         Player p2 = new Player(player2Decks);
-
         //  loop-ul de jocuri
         for (int i = 0; i < inputData.getGames().size(); i++) {
-            // TODO initializarea unui joc
+            //initializarea unui joc
             p1.setMana(0);
             p2.setMana(0);
             Table table = new Table(new ArrayList<ArrayList<Card>>());
-            Hero player1Hero = new Hero(inputData.getGames().get(i).getStartGame().getPlayerOneHero().getMana(),
+            Hero player1Hero = new Hero(
+                    inputData.getGames().get(i).getStartGame().getPlayerOneHero().getMana(),
                     inputData.getGames().get(i).getStartGame().getPlayerOneHero().getDescription(),
                     inputData.getGames().get(i).getStartGame().getPlayerOneHero().getColors(),
                     inputData.getGames().get(i).getStartGame().getPlayerOneHero().getName());
-            Hero player2Hero = new Hero(inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getMana(),
+            Hero player2Hero = new Hero(
+                    inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getMana(),
                     inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getDescription(),
                     inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getColors(),
                     inputData.getGames().get(i).getStartGame().getPlayerTwoHero().getName());
-
             Game game = new Game(p1,
                     p2,
                     inputData.getGames().get(i).getStartGame().getPlayerOneDeckIdx(),
@@ -162,11 +182,11 @@ public final class Main {
                     inputData.getGames().get(i).getStartGame().getShuffleSeed(),
                     inputData.getGames().get(i).getStartGame().getStartingPlayer()
             );
-
-            // TODO loop pt urmarirea actiunilor din jocul respectiv
+            // loop pt urmarirea actiunilor din jocul respectiv
             for (int j = 0; j < inputData.getGames().get(i).getActions().size(); j++) {
                 // preluarea fiecarei actiuni ale unui joc
-                ObjectNode arrayObject = game.executeCommand(inputData.getGames().get(i).getActions().get(j).getCommand(),
+                ObjectNode arrayObject = game.executeCommand(
+                        inputData.getGames().get(i).getActions().get(j).getCommand(),
                         inputData.getGames().get(i).getActions().get(j).getHandIdx(),
                         inputData.getGames().get(i).getActions().get(j).getCardAttacker(),
                         inputData.getGames().get(i).getActions().get(j).getCardAttacked(),
@@ -175,17 +195,16 @@ public final class Main {
                         inputData.getGames().get(i).getActions().get(j).getX(),
                         inputData.getGames().get(i).getActions().get(j).getY()
                 );
-
-                if (arrayObject != null) // adugare in json a rezultatului functiei, daca exista
+                if (arrayObject != null) { // adugare in json a rezultatului functiei, daca exista
                     output.addPOJO(arrayObject);
-
-                if (game.getPlayerOneHero().getHealth() <= 0 && game.getGameEnded() == 0) { // jocul se termina daca oricare dintre eroi are health egal cu 0
+                }
+                if (game.getPlayerOneHero().getHealth() <= 0 && game.getGameEnded() == 0) {
+                    // jocul se termina daca oricare dintre eroi are health egal cu 0
                     ObjectNode victory = objectMapper.createObjectNode();
                     victory.putPOJO("gameEnded", "Player two killed the enemy hero.");
                     output.addPOJO(victory);
                     p2.setGamesWon(p2.getGamesWon() + 1);
                     game.setGameEnded(1);
-
                 } else {
                     if (game.getPlayerTwoHero().getHealth() <= 0 && game.getGameEnded() == 0) {
                         ObjectNode victory = objectMapper.createObjectNode();
@@ -198,7 +217,6 @@ public final class Main {
             }
 
         }
-
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);
     }

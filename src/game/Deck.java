@@ -1,12 +1,12 @@
-package Game;
+package game;
 
 import java.util.ArrayList;
 
-public class Deck {
+public final class Deck {
     private ArrayList<Card> cards;
     private int nrCardsInDeck;
 
-    public Deck(int nrCardsInDeck) {
+    public Deck(final int nrCardsInDeck) {
         this.nrCardsInDeck = nrCardsInDeck;
         cards = new ArrayList<Card>();
     }
@@ -19,16 +19,8 @@ public class Deck {
         return nrCardsInDeck;
     }
 
-    public void setNrCardsInDeck(int nrCardsInDeck) {
+    public void setNrCardsInDeck(final int nrCardsInDeck) {
         this.nrCardsInDeck = nrCardsInDeck;
     }
 
-    public String toString() {
-        return "Deck{"
-                + "nr_cards_in_deck="
-                + nrCardsInDeck
-                + ", cards="
-                + cards
-                + '}';
-    }
 }

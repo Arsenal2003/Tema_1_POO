@@ -1,4 +1,4 @@
-package Game;
+package game;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class Game {
+public final class Game {
     private Player firstPlayer;
     private Player secondPlayer;
     private int playerOneDeckIdx;
@@ -30,11 +30,18 @@ public class Game {
     private int round;
     private int gameEnded = 0;
 
+    /**
+     *
+     * @return the round number that we are currently in
+     */
     public int calulateRound() {
         return turns / 2 + 1;
     }
 
-    public Game(Player firstPlayer, Player secondPlayer, int playerOneDeckIdx, int playerTwoDeckIdx, Hero playerOneHero, Hero playerTwoHero, Table table, int shuffleSeed, int startingPlayer) {
+    public Game(final Player firstPlayer, final Player secondPlayer,
+                 final int playerOneDeckIdx, final int playerTwoDeckIdx,
+                final Hero playerOneHero, final Hero playerTwoHero,
+                final Table table, final int shuffleSeed, final int startingPlayer) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.playerOneDeckIdx = playerOneDeckIdx;
@@ -51,27 +58,37 @@ public class Game {
         this.playerOneDeck = new Deck(firstPlayer.getDecksPlayer().get(0).getNrCardsInDeck());
         for (int i = 0; i < firstPlayer.getDecksPlayer().get(0).getNrCardsInDeck(); i++) {
             Card newCard;
-            if (firstPlayer.getDecksPlayer().get(this.playerOneDeckIdx).getCards().get(i) instanceof Minion)
-                newCard = new Minion((Minion) firstPlayer.getDecksPlayer().get(this.playerOneDeckIdx).getCards().get(i));
-            else
-                newCard = new Enviroment(firstPlayer.getDecksPlayer().get(this.playerOneDeckIdx).getCards().get(i));
+            if (firstPlayer.getDecksPlayer()
+                    .get(this.playerOneDeckIdx).getCards().get(i) instanceof Minion) {
+                newCard = new Minion((Minion) firstPlayer.getDecksPlayer()
+                        .get(this.playerOneDeckIdx).getCards().get(i));
+            } else {
+                newCard = new Environment(firstPlayer.getDecksPlayer()
+                        .get(this.playerOneDeckIdx).getCards().get(i));
+            }
             playerOneDeck.getCards().add(newCard);
         }
 
-        this.playerTwoDeck = new Deck(secondPlayer.getDecksPlayer().get(0).getNrCardsInDeck());
+        this.playerTwoDeck = new Deck(secondPlayer
+                .getDecksPlayer().get(0).getNrCardsInDeck());
         for (int i = 0; i < secondPlayer.getDecksPlayer().get(0).getNrCardsInDeck(); i++) {
             Card newCard;
-            if (secondPlayer.getDecksPlayer().get(this.playerTwoDeckIdx).getCards().get(i) instanceof Minion)
-                newCard = new Minion((Minion) secondPlayer.getDecksPlayer().get(this.playerTwoDeckIdx).getCards().get(i));
-            else
-                newCard = new Enviroment(secondPlayer.getDecksPlayer().get(this.playerTwoDeckIdx).getCards().get(i));
+            if (secondPlayer.getDecksPlayer()
+                    .get(this.playerTwoDeckIdx).getCards().get(i) instanceof Minion) {
+                newCard = new Minion((Minion) secondPlayer
+                        .getDecksPlayer().get(this.playerTwoDeckIdx).getCards().get(i));
+            } else {
+                newCard = new Environment(
+                        secondPlayer.getDecksPlayer()
+                                .get(this.playerTwoDeckIdx).getCards().get(i));
+            }
             playerTwoDeck.getCards().add(newCard);
         }
 
         shuffleDeck(playerOneDeck.getCards());
         shuffleDeck(playerTwoDeck.getCards());
 
-        if (calulateRound() != round) { // inceputul primei runde
+        if (calulateRound() != round) { // the start of the first round
             round = calulateRound();
             addManaPlayer(firstPlayer, round);
             addManaPlayer(secondPlayer, round);
@@ -81,11 +98,21 @@ public class Game {
 
     }
 
-    public void addManaPlayer(Player p, int mana) {
+    /**
+     *
+     * @param p the player
+     * @param mana the number of mana to add
+     */
+    public void addManaPlayer(final Player p, final int mana) {
         p.setMana(p.getMana() + Math.min(mana, 10));
     }
 
-    public void addCardInHand(Deck playerHand, Deck playerDeck) {
+    /**
+     * adds a card from deck in hand
+     * @param playerHand the players hand
+     * @param playerDeck the players deck
+     */
+    public void addCardInHand(final Deck playerHand, final Deck playerDeck) {
         if (playerDeck.getNrCardsInDeck() != 0) {
             playerHand.getCards().add(playerDeck.getCards().get(0));
             playerDeck.getCards().remove(0);
@@ -95,15 +122,40 @@ public class Game {
 
     }
 
+    /**
+     *
+     * @return the shuffle seed necessary to shuffle the decks
+     */
     public int getShuffleSeed() {
         return shuffleSeed;
     }
 
-    public void shuffleDeck(ArrayList<Card> unshuffledDeck) {
+    /**
+     * returns a shuffled deck shuffled with the shuffle seed
+     * @param unshuffledDeck the un shuffled deck
+     */
+    public void shuffleDeck(final ArrayList<Card> unshuffledDeck) {
         Collections.shuffle(unshuffledDeck, new Random(getShuffleSeed()));
     }
 
-    public ObjectNode executeCommand(String name, int handIdx, Coordinates attacker, Coordinates attacked, int affectedrow, int playerIdx, int x, int y) {
+    /**
+     * a function that maps the name of the command with the actual function implementation
+     * @param name the name of the command
+     * @param handIdx the position where the card is in the hand of the player
+     * @param attacker the card that attacks
+     * @param attacked the card that is attacked
+     * @param affectedrow the row that is effected by the spell
+     * @param playerIdx the player Index
+     * @param x the row on the table
+     * @param y the index in the row on the table
+     * @return an object node that contains the data that is added in the .json file
+     */
+    public ObjectNode executeCommand(final String name, final int handIdx,
+                                     final Coordinates attacker,
+                                     final Coordinates attacked,
+                                     final int affectedrow,
+                                     final int playerIdx,
+                                     final int x, final int y) {
         ObjectMapper objectMapper = new ObjectMapper();
         switch (name) {
             case "getPlayerDeck":
@@ -145,41 +197,43 @@ public class Game {
                 break;
             case "placeCard":
                 return placeCard(handIdx, objectMapper);
-
+            default:break;
         }
         return null;
     }
 
-    private ObjectNode getPlayerOneWins(ObjectMapper objectMapper) {
+    private ObjectNode getPlayerOneWins(final ObjectMapper objectMapper) {
         ObjectNode arrayObject = objectMapper.createObjectNode();
         arrayObject.putPOJO("command", "getPlayerOneWins");
         arrayObject.putPOJO("output", firstPlayer.getGamesWon());
         return arrayObject;
     }
 
-    private ObjectNode getPlayerTwoWins(ObjectMapper objectMapper) {
+    private ObjectNode getPlayerTwoWins(final ObjectMapper objectMapper) {
         ObjectNode arrayObject = objectMapper.createObjectNode();
         arrayObject.putPOJO("command", "getPlayerTwoWins");
         arrayObject.putPOJO("output", secondPlayer.getGamesWon());
         return arrayObject;
     }
 
-    private ObjectNode getTotalGamesPlayed(ObjectMapper objectMapper) {
+    private ObjectNode getTotalGamesPlayed(final ObjectMapper objectMapper) {
         ObjectNode arrayObject = objectMapper.createObjectNode();
         arrayObject.putPOJO("command", "getTotalGamesPlayed");
         arrayObject.putPOJO("output", firstPlayer.getGamesWon() + secondPlayer.getGamesWon());
         return arrayObject;
     }
 
-    private ObjectNode abilityHero(int affectedrow, ObjectMapper objectMapper) {
+    private ObjectNode abilityHero(final int affectedrow, final ObjectMapper objectMapper) {
         String error;
-        if (playerTurn == 1)
+        if (playerTurn == 1) {
             error = table.abilityHeroFirstPlayer(affectedrow, this);
-        else
+        } else {
             error = table.abilityHeroSecondPlayer(affectedrow, this);
+        }
 
-        if (error == null)
+        if (error == null) {
             return null;
+        }
         ObjectNode arrayObject = objectMapper.createObjectNode();
         arrayObject.putPOJO("command", "useHeroAbility");
         arrayObject.putPOJO("affectedRow", affectedrow);
@@ -187,10 +241,12 @@ public class Game {
         return arrayObject;
     }
 
-    private ObjectNode attackHero(Coordinates attacker, int playerTurn, ObjectMapper objectMapper) {
+    private ObjectNode attackHero(final Coordinates attacker,
+                                  final int playerTurn, final ObjectMapper objectMapper) {
         String error = table.attackHero(attacker, playerTurn, this);
-        if (error == null)
+        if (error == null) {
             return null;
+        }
         ObjectNode arrayObject = objectMapper.createObjectNode();
         ObjectNode coordAttacker = objectMapper.createObjectNode();
 
@@ -202,10 +258,11 @@ public class Game {
         return arrayObject;
     }
 
-    private ObjectNode cardUsesAbility(Coordinates attacker, Coordinates attacked, int playerTurn, ObjectMapper objectMapper) {
+    private ObjectNode cardUsesAbility(final Coordinates attacker, final Coordinates attacked, final int playerTurn, final ObjectMapper objectMapper) {
         String error = table.cardAbility(attacker, attacked, playerTurn);
-        if (error == null)
+        if (error == null) {
             return null;
+        }
         ObjectNode arrayObject = objectMapper.createObjectNode();
         ObjectNode coordAttacker = objectMapper.createObjectNode();
         ObjectNode coordAttacked = objectMapper.createObjectNode();
@@ -223,10 +280,11 @@ public class Game {
         return arrayObject;
     }
 
-    private ObjectNode cardUsesAttack(Coordinates attacker, Coordinates attacked, int playerTurn, ObjectMapper objectMapper) {
+    private ObjectNode cardUsesAttack(final Coordinates attacker, final Coordinates attacked, final int playerTurn, final ObjectMapper objectMapper) {
         String error = table.cardAttack(attacker, attacked, playerTurn);
-        if (error == null)
+        if (error == null) {
             return null;
+        }
         ObjectNode arrayObject = objectMapper.createObjectNode();
         ObjectNode coordAttacker = objectMapper.createObjectNode();
         ObjectNode coordAttacked = objectMapper.createObjectNode();
@@ -244,7 +302,7 @@ public class Game {
         return arrayObject;
     }
 
-    private ObjectNode getFrozenCardsOnTable(ObjectMapper objectMapper) {
+    private ObjectNode getFrozenCardsOnTable(final ObjectMapper objectMapper) {
         ArrayNode vect = table.printFrozenCards(objectMapper);
         ObjectNode arrayObject = objectMapper.createObjectNode();
         arrayObject.putPOJO("command", "getFrozenCardsOnTable");
@@ -252,15 +310,17 @@ public class Game {
         return arrayObject;
     }
 
-    private ObjectNode useEnvironmentCard(int handIdx, int affectedrow, ObjectMapper objectMapper) {
+    private ObjectNode useEnvironmentCard(final int handIdx, final int affectedrow, final ObjectMapper objectMapper) {
         String rasp;
-        if (playerTurn == 1)
+        if (playerTurn == 1) {
             rasp = table.playEnvironmentCard(playerOneHand, handIdx, firstPlayer, playerTurn, affectedrow);
-        else
+        } else {
             rasp = table.playEnvironmentCard(playerTwoHand, handIdx, secondPlayer, playerTurn, affectedrow);
+        }
 
-        if (rasp == null)
+        if (rasp == null) {
             return null;
+        }
 
         ObjectNode arrayObject = objectMapper.createObjectNode();
         arrayObject.putPOJO("command", "useEnvironmentCard");
@@ -271,32 +331,35 @@ public class Game {
 
     }
 
-    private ObjectNode getCardAtPosition(Table table, int x, int y, ObjectMapper objectMapper) {
+    private ObjectNode getCardAtPosition(final Table table, final int x, final int y, final ObjectMapper objectMapper) {
         ObjectNode arrayObject = objectMapper.createObjectNode();
         arrayObject.putPOJO("command", "getCardAtPosition");
-        if (table.printCardAtPosition(x, y, objectMapper) == null)
+        if (table.printCardAtPosition(x, y, objectMapper) == null) {
             arrayObject.putPOJO("output", "No card available at that position.");
-        else
+        } else {
             arrayObject.putPOJO("output", table.printCardAtPosition(x, y, objectMapper));
+        }
         arrayObject.putPOJO("x", x);
         arrayObject.putPOJO("y", y);
         return arrayObject;
     }
 
-    private ObjectNode getEnvironmentCardsInHand(int playerIdx, ObjectMapper objectMapper) {
+    private ObjectNode getEnvironmentCardsInHand(final int playerIdx, final ObjectMapper objectMapper) {
         ArrayNode vect = objectMapper.createArrayNode();
         ObjectNode objFinal = objectMapper.createObjectNode();
         if (playerIdx == 1) {
-            for (int i = 0; i < playerOneHand.getNrCardsInDeck(); i++)
-                if (playerOneHand.getCards().get(i) instanceof Enviroment) {
+            for (int i = 0; i < playerOneHand.getNrCardsInDeck(); i++) {
+                if (playerOneHand.getCards().get(i) instanceof Environment) {
                     vect.addPOJO(playerOneHand.getCards().get(i).cardToJson(objectMapper));
                 }
+            }
         }
         if (playerIdx == 2) {
-            for (int i = 0; i < playerTwoHand.getNrCardsInDeck(); i++)
-                if (playerTwoHand.getCards().get(i) instanceof Enviroment) {
+            for (int i = 0; i < playerTwoHand.getNrCardsInDeck(); i++) {
+                if (playerTwoHand.getCards().get(i) instanceof Environment) {
                     vect.addPOJO(playerTwoHand.getCards().get(i).cardToJson(objectMapper));
                 }
+            }
         }
         objFinal.putPOJO("command", "getEnvironmentCardsInHand");
         objFinal.putPOJO("output", vect);
@@ -304,33 +367,36 @@ public class Game {
         return objFinal;
     }
 
-    private ObjectNode getCardsOnTable(ObjectMapper objectMapper) {
+    private ObjectNode getCardsOnTable(final ObjectMapper objectMapper) {
         ObjectNode arrayObject = objectMapper.createObjectNode();
         arrayObject.putPOJO("command", "getCardsOnTable");
         arrayObject.putPOJO("output", table.printTableToJSON(objectMapper));
         return arrayObject;
     }
 
-    private ObjectNode getPlayerMana(int playerIdx, ObjectMapper objectMapper) {
+    private ObjectNode getPlayerMana(final int playerIdx, final ObjectMapper objectMapper) {
         ObjectNode arrayObject = objectMapper.createObjectNode();
         arrayObject.putPOJO("command", "getPlayerMana");
         arrayObject.putPOJO("playerIdx", playerIdx);
-        if (playerIdx == 1)
+        if (playerIdx == 1) {
             arrayObject.putPOJO("output", firstPlayer.getMana());
-        else
+        } else {
             arrayObject.putPOJO("output", secondPlayer.getMana());
+        }
         return arrayObject;
     }
 
-    public ObjectNode placeCard(int handIdx, ObjectMapper objectMapper) {
+    private ObjectNode placeCard(final int handIdx, final ObjectMapper objectMapper) {
         String rasp;
-        if (playerTurn == 1)
+        if (playerTurn == 1) {
             rasp = table.putCardOnTable(playerOneHand, handIdx, firstPlayer, playerTurn);
-        else
+        } else {
             rasp = table.putCardOnTable(playerTwoHand, handIdx, secondPlayer, playerTurn);
+        }
 
-        if (rasp == null)
+        if (rasp == null) {
             return null;
+        }
 
         ObjectNode arrayObject = objectMapper.createObjectNode();
         arrayObject.putPOJO("command", "placeCard");
@@ -339,7 +405,7 @@ public class Game {
         return arrayObject;
     }
 
-    public ObjectNode getPlayerHand(int playerIdx, ObjectMapper objectMapper) {
+    private ObjectNode getPlayerHand(final int playerIdx, final ObjectMapper objectMapper) {
         ArrayNode vect = objectMapper.createArrayNode();
         ObjectNode objFinal = objectMapper.createObjectNode();
         if (playerIdx == 1) {
@@ -354,7 +420,7 @@ public class Game {
         return objFinal;
     }
 
-    public ObjectNode getPlayerDeck(int playerIdx, ObjectMapper objectMapper) {
+    private ObjectNode getPlayerDeck(final int playerIdx, final ObjectMapper objectMapper) {
         ArrayNode vect = objectMapper.createArrayNode();
         ObjectNode objFinal = objectMapper.createObjectNode();
         if (playerIdx == 1) {
@@ -370,27 +436,27 @@ public class Game {
         return objFinal;
     }
 
-    private void printVectorInJson(ObjectMapper objectMapper, ArrayNode vect, Deck playerDeck) {
+    private void printVectorInJson(final ObjectMapper objectMapper, final ArrayNode vect, final Deck playerDeck) {
         ObjectNode card;
         for (int i = 0; i < playerDeck.getNrCardsInDeck(); i++) {
             if (playerDeck.getCards().get(i) instanceof Minion m) {
                 card = m.cardToJson(objectMapper);
-            } else
+            } else {
                 card = playerDeck.getCards().get(i).cardToJson(objectMapper);
+            }
             vect.addPOJO(card);
         }
     }
 
-    public ObjectNode getPlayerHero(int playerIdx, ObjectMapper objectMapper) {
+    private ObjectNode getPlayerHero(final int playerIdx, final ObjectMapper objectMapper) {
         ObjectNode objFinal = objectMapper.createObjectNode();
         objFinal.putPOJO("command", "getPlayerHero");
         objFinal.putPOJO("playerIdx", playerIdx);
-        if (playerIdx == 1)
+        if (playerIdx == 1) {
             objFinal.putPOJO("output", playerOneHero.cardToJson(objectMapper));
-        else
+        } else {
             objFinal.putPOJO("output", playerTwoHero.cardToJson(objectMapper));
-
-
+        }
         return objFinal;
     }
 
@@ -406,11 +472,11 @@ public class Game {
         return playerTwoHero;
     }
 
-    public void setPlayerTwoHero(Hero playerTwoHero) {
+    public void setPlayerTwoHero(final Hero playerTwoHero) {
         this.playerTwoHero = playerTwoHero;
     }
 
-    public ObjectNode getPlayerTurn(ObjectMapper objectMapper) {
+    private ObjectNode getPlayerTurn(final ObjectMapper objectMapper) {
 
         ObjectNode arrayObject = objectMapper.createObjectNode();
         arrayObject.putPOJO("command", "getPlayerTurn");
@@ -418,9 +484,12 @@ public class Game {
         return arrayObject;
     }
 
+    /**
+     * function that changes the current player
+     * turn from 1 to 2 and back around
+     */
     public void changePlayerTurn() {
         table.deFrozeCards(playerTurn);
-
 
         if (playerTurn == 1) {
             playerOneHeroAttacked = 0;
@@ -431,7 +500,7 @@ public class Game {
         }
         turns += 1;
 
-        if (calulateRound() != round) { // atunci cand se sare la urmatoarea runda
+        if (calulateRound() != round) { // jump to next round
             round = calulateRound();
             addManaPlayer(firstPlayer, round);
             addManaPlayer(secondPlayer, round);
@@ -445,7 +514,7 @@ public class Game {
         return gameEnded;
     }
 
-    public void setGameEnded(int gameEnded) {
+    public void setGameEnded(final int gameEnded) {
         this.gameEnded = gameEnded;
     }
 
@@ -453,17 +522,11 @@ public class Game {
         return firstPlayer;
     }
 
-    public void setFirstPlayer(Player firstPlayer) {
-        this.firstPlayer = firstPlayer;
-    }
 
     public Player getSecondPlayer() {
         return secondPlayer;
     }
 
-    public void setSecondPlayer(Player secondPlayer) {
-        this.secondPlayer = secondPlayer;
-    }
 
     public int getPlayerOneHeroAttacked() {
         return playerOneHeroAttacked;
@@ -473,11 +536,11 @@ public class Game {
         return playerTwoHeroAttacked;
     }
 
-    public void setPlayerOneHeroAttacked(int playerOneHeroAttacked) {
+    public void setPlayerOneHeroAttacked(final int playerOneHeroAttacked) {
         this.playerOneHeroAttacked = playerOneHeroAttacked;
     }
 
-    public void setPlayerTwoHeroAttacked(int playerTwoHeroAttacked) {
+    public void setPlayerTwoHeroAttacked(final int playerTwoHeroAttacked) {
         this.playerTwoHeroAttacked = playerTwoHeroAttacked;
     }
 
