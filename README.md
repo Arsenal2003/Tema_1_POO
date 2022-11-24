@@ -1,44 +1,40 @@
 
 
-# Tema POO  - GwentStone
-
-<div align="center"><img src="https://tenor.com/view/witcher3-gif-9340436.gif" width="500px"></div>
-
-#### Assignment Link: [https://ocw.cs.pub.ro/courses/poo-ca-cd/teme/tema](https://ocw.cs.pub.ro/courses/poo-ca-cd/teme/tema)
-
+<h3 > OOP Homework: </h3>   
+<h1 align="center"> GwentStone </h1>
 
 ## Skel Structure
 
 * src/
   * checker/ - checker files
   * fileio/ - contains classes used to read data from the json files
+  * game/  - contains the classes used for implementing the game
   * main/
-      * Main - the Main class runs the checker on your implementation. Add the entry point to your implementation in it. Run Main to test your implementation from the IDE or from command line.
+      * Main - the Main class runs the checker on the current implementation of the game. Run Main to test your implementation from the IDE or from command line.
       * Test - run the main method from Test class with the name of the input file from the command line and the result will be written
-        to the out.txt file. Thus, you can compare this result with ref.
+        to the out.txt file. 
 * input/ - contains the tests in JSON format
 * ref/ - contains all reference output for the tests in JSON format
 
-## Tests
+### Package game   
+  The game package contains the following classes: <br>
+* Game - the class where the logic and rules for the game are implemented 
+* Player - stores all the information necessary for a player 
+* Table - helps cards interact between them  
+* Card - stores all the information necessary for a card
+  * Environment
+  * Minion
+  * Hero 
+* Deck - a collection of Card type elements 
 
-1. test01_game_start - 3p
-2. test02_place_card - 4p
-3. test03_place_card_invalid - 4p
-4. test04_use_env_card - 4p
-5. test05_use_env_card_invalid - 4p
-6. test06_attack_card - 4p
-7. test07_attack_card_invalid - 4p
-8. test08_use_card_ability - 4p
-9. test09_use_card_ability_invalid -4p
-10. test10_attack_hero - 4p
-11. test11_attack_hero_invalid - 4p
-12. test12_use_hero_ability_1 - 4p
-13. test13_use_hero_ability_2 - 4p
-14. test14_use_hero_ability_invalid_1 - 4p
-15. test15_use_hero_ability_invalid_2 - 4p
-16. test16_multiple_games_valid - 5p
-17. test17_multiple_games_invalid - 6p
-18. test18_big_game - 10p
+The Card class is a superclass for the Environment, Minion, and Hero classes.
+This is done because all the inherited classes have a lot of common attributes, such as mana, description, name, and colors. 
+The Environment and Minion classes represent the two different type of cards that exists. 
+The Hero can be considered a special card that is unique for each player.
 
+### Functionality
+At the beginning of the implementation, all the data necessary to start the game is put in the corresponding fields. 
+For each game, we listen for a predefined number of actions, actions that produce an output that is stored in the output
+variable and later exported in JSON format. A game ends when a player's hero is killed( the health variable is equal to
+or less than 0).
 
-<div align="center"><img src="https://tenor.com/view/homework-time-gif-24854817.gif" width="500px"></div>

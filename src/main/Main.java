@@ -82,7 +82,7 @@ public final class Main {
 
         //TODO add here the entry point to your implementation
 
-        // citire deck pt player 1
+        // reading deck for player 1
         ArrayList<Deck> player1Decks = new ArrayList<>();
         for (int i = 0; i < inputData.getPlayerOneDecks().getNrDecks(); i++) {
             Deck player1Deck = new Deck(inputData.getPlayerOneDecks().getNrCardsInDeck());
@@ -118,7 +118,7 @@ public final class Main {
             }
             player1Decks.add(player1Deck);
         }
-        // citire deck pt player 2
+        // reading deck for player 2
         ArrayList<Deck> player2Decks = new ArrayList<>();
         for (int i = 0; i < inputData.getPlayerTwoDecks().getNrDecks(); i++) {
             Deck player2Deck = new Deck(inputData.getPlayerTwoDecks().getNrCardsInDeck());
@@ -156,9 +156,9 @@ public final class Main {
         }
         Player p1 = new Player(player1Decks);
         Player p2 = new Player(player2Decks);
-        //  loop-ul de jocuri
+        // iterating through the games
         for (int i = 0; i < inputData.getGames().size(); i++) {
-            //initializarea unui joc
+            // initialization of a game
             p1.setMana(0);
             p2.setMana(0);
             Table table = new Table(new ArrayList<ArrayList<Card>>());
@@ -182,9 +182,9 @@ public final class Main {
                     inputData.getGames().get(i).getStartGame().getShuffleSeed(),
                     inputData.getGames().get(i).getStartGame().getStartingPlayer()
             );
-            // loop pt urmarirea actiunilor din jocul respectiv
+            // reading the actions for the current game
             for (int j = 0; j < inputData.getGames().get(i).getActions().size(); j++) {
-                // preluarea fiecarei actiuni ale unui joc
+                // calling the corresponding function for each action
                 ObjectNode arrayObject = game.executeCommand(
                         inputData.getGames().get(i).getActions().get(j).getCommand(),
                         inputData.getGames().get(i).getActions().get(j).getHandIdx(),
@@ -195,11 +195,11 @@ public final class Main {
                         inputData.getGames().get(i).getActions().get(j).getX(),
                         inputData.getGames().get(i).getActions().get(j).getY()
                 );
-                if (arrayObject != null) { // adugare in json a rezultatului functiei, daca exista
+                if (arrayObject != null) { // add to the output the result of the function
                     output.addPOJO(arrayObject);
                 }
                 if (game.getPlayerOneHero().getHealth() <= 0 && game.getGameEnded() == 0) {
-                    // jocul se termina daca oricare dintre eroi are health egal cu 0
+                    // end the game if the hero of a player has 0 health
                     ObjectNode victory = objectMapper.createObjectNode();
                     victory.putPOJO("gameEnded", "Player two killed the enemy hero.");
                     output.addPOJO(victory);
